@@ -1,5 +1,7 @@
 # RxjsStudy
-
+## 专业术语
+1. FRP(Functional Reactive Programming):RxJS是 Functional Programming 跟 Reactive Programming;
+2. FP(Functional Programming):函数式编程
 ## 简介
 * [何为RxJS【一】](https://segmentfault.com/a/1190000007553779)
 * [何为RxJS【二】](https://segmentfault.com/a/1190000004293922)
