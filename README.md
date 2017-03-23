@@ -6,6 +6,7 @@
 * [怎么理解rxjs](https://www.zhihu.com/question/48615787/answer/142414744)
 * [Rx中的subject和scheduler怎么理解概念？](https://www.zhihu.com/question/54027469/answer/141217783)
 ## 案例demo
-[Hello RxJS](https://zhuanlan.zhihu.com/p/23331432)
+* [Hello RxJS](https://zhuanlan.zhihu.com/p/23331432)
+* [做一个 github 小应用](https://segmentfault.com/a/1190000007562818)
 ## 进阶
-[10个需要知道的RxJS函数与示例](http://www.html5in.com/10-need-to-know-rxjs-functions-with-examples/)
+* [10个需要知道的RxJS函数与示例](http://www.html5in.com/10-need-to-know-rxjs-functions-with-examples/)
