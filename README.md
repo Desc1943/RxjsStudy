@@ -10,4 +10,5 @@
 * [Hello RxJS](https://zhuanlan.zhihu.com/p/23331432)
 * [做一个 github 小应用](https://segmentfault.com/a/1190000007562818)
 ## 进阶
+* [30 天精通 RxJS](http://ithelp.ithome.com.tw/articles/10189028)
 * [10个需要知道的RxJS函数与示例](http://www.html5in.com/10-need-to-know-rxjs-functions-with-examples/)
