@@ -1,0 +1,31 @@
+const babel = {
+
+  // cacheDirectory: true,
+
+  'presets': [
+    [
+      'es2015',
+      {
+        'modules': false,
+      }
+    ],
+    'stage-2',
+    // Stage 2 is "draft", 4 is finished, 0 is strawMan.
+    'react',
+  ],
+
+  'plugins': ['transform-runtime',],
+
+  'env': {
+    'development': {
+      'plugins': ['react-hot-loader/babel'],
+    },
+    'production': {
+      'presets': [],
+      'plugins': [],
+    }
+  },
+
+};
+
+module.exports = babel;
