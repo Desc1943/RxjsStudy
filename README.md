@@ -55,4 +55,4 @@
   * 六個 operators 都是平時很容易用到  `skip`, `takeLast`, `last`, `concat`, `startWith`, `merge`
 #### 第十天：[ Observable Operator - combineLatest, withLatestFrom, zip](http://ithelp.ithome.com.tw/articles/10187638)         
   * 三個合併用的 operators，這三個 operators 的 callback 都會依照合併的 observable 數量來傳入參數，如果我們合併了三個 observable，callback 就會有三個參數，而不管合併幾個 observable 都會只會回傳一個值。
-#### 第十一天：[實務範例 - 完整拖拉應用](http://ithelp.ithome.com.tw/articles/10187756)         
+#### 第十一天：[實務範例 - 完整拖拉應用](http://ithelp.ithome.com.tw/articles/10187756) 

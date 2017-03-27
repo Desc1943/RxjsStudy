@@ -1,6 +1,6 @@
-#Creation Operator 
+# Creation operator 
 
-Observable 有许多创建实例的方法，称为 。
+Observable 有许多创建实例的方法.
 
 下面列出 RxJS 常用的 ：
 * [create](#create)
@@ -15,6 +15,7 @@ Observable 有许多创建实例的方法，称为 。
 * [interval](#interval)
 * [timer](#timer)
 * [unsubscribe](#unsubscribe )(用来取消订购)
+
 ## [create](#)
 需要next()一步步发出请求。
 ```javascript
@@ -39,6 +40,7 @@ const observable = Observable
 // Anna
 // complete
 ```
+
 ## [of](#)
 如果同步传递多个值，可以使用 `of` 简化操作。
 ```javascript
@@ -59,6 +61,7 @@ const observable = Observable
 // Anna
 // complete
 ```
+
 ## [from](#)
 同 `of` ，但接收一个**可枚举**对象或**字符串**对象。
 ```javascript
@@ -79,6 +82,7 @@ const observable = Observable
 // Anna
 // complete
 ```
+
 ## [fromPromise](#)
 `fromPromise` 与 `from` 而且还能接收一个Promise对象。
 ```javascript
@@ -102,6 +106,7 @@ const observable = Observable
 // Hello RxJS!
 // complete
 ```
+
 ## [fromEvent](#)
 通过Event建立Observable.
 ```javascript
@@ -120,6 +125,7 @@ const observable = Observable
   });
 // MouseEvent {...}
 ```
+
 ## [fromEventPattern](#)
 这个方法是个类事件使用。所谓的类事件就是指其行为跟事件相像，同时具有注册监听及移除监听两种行为，就像 DOM Event 有 addEventListener 及 removeEventListener 一样！
 ```javascript
@@ -174,6 +180,7 @@ const observable = Observable
     eggHead.removeListener.bind(eggHead)(handler)
   )
 ```
+
 ## [empty](#)
 `Observable` 进入 `complete` ！
 ```javascript
@@ -192,6 +199,7 @@ const observable = Observable
   });
 // complete
 ```
+
 ## [never](#)
 `Observable` 处于永久的等待状态，没有明确的时间！
 ```javascript
@@ -209,6 +217,7 @@ const observable = Observable
     }
   });
 ```
+
 ## [throw](#)
 `Observable` 抛出错误，进入 `error` 状态!
 ```javascript
@@ -227,6 +236,7 @@ const observable = Observable
   });
 // 抛出错误！ 
 ```
+
 ## [interval](#)
 如同 JavaScript 的 `setInterval` 建立一个持续的行为！接收一个 `ms`计量单位的数值！
 ```javascript
@@ -248,6 +258,7 @@ const observable = Observable
 // 2
 // ...
 ```
+
 ## [timer](#)
 如同 JavaScript 的 `setInterval` 建立一个持续的行为！接收一个 `ms`计量单位的数值！
 > timer 第一个参数除了可以是数值（Number）之外，也可以是日期(Date)，它会等到指定的时间再发送第一个值。
@@ -270,6 +281,7 @@ const observable = Observable
 // 2
 // ...
 ```
+
 ## [unsubscribe](#)
 订阅 `Observable` 之后就会回传一个物件，这个物件就是用来取消订阅的。
 > 一般我们不会使用它，而是使用 `takeUntil`
