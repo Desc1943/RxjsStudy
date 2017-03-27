@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 const observable = Observable
   .interval(1000)
+  .mapTo( 2)
   .subscribe({
     next: value => {
       console.log(value);
@@ -14,6 +15,3 @@ const observable = Observable
       console.log(error);
     }
   });
-setTimeout(() => {
-  observable.unsubscribe();
-}, 2000);
