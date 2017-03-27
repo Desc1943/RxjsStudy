@@ -1,8 +1,8 @@
-# Creation Operator
+#Creation Operator 
 
-Observable 有许多创建实例的方法，称为 creation operator。
+Observable 有许多创建实例的方法，称为 。
 
-下面列出 RxJS 常用的 creation operator：
+下面列出 RxJS 常用的 ：
 * [create](#create)
 * [of](#of)
 * [from](#from)
@@ -15,7 +15,7 @@ Observable 有许多创建实例的方法，称为 creation operator。
 * [interval](#interval)
 * [timer](#timer)
 * [unsubscribe](#unsubscribe )(用来取消订购)
-## [create](#Creation Operator)
+## [create](#)
 需要next()一步步发出请求。
 ```` javascript
 const observable = Observable
@@ -39,7 +39,7 @@ const observable = Observable
 // Anna
 // complete
 ````
-## [of](#Creation Operator)
+## [of](#)
 如果同步传递多个值，可以使用 `of` 简化操作。
 ```` javascript
 const observable = Observable
@@ -59,7 +59,7 @@ const observable = Observable
 // Anna
 // complete
 ````
-## [from](#Creation Operator)
+## [from](#)
 同 `of` ，但接收一个**可枚举**对象或**字符串**对象。
 ```` javascript
 const observable = Observable
@@ -79,7 +79,7 @@ const observable = Observable
 // Anna
 // complete
 ````
-## [fromPromise](#Creation Operator)
+## [fromPromise](#)
 `fromPromise` 与 `from` 而且还能接收一个Promise对象。
 ```` javascript
 const observable = Observable
@@ -102,7 +102,7 @@ const observable = Observable
 // Hello RxJS!
 // complete
 ````
-## [fromEvent](#Creation Operator)
+## [fromEvent](#)
 通过Event建立Observable.
 ```` javascript
 const observable = Observable
@@ -120,7 +120,7 @@ const observable = Observable
   });
 // MouseEvent {...}
 ````
-## [fromEventPattern](#Creation Operator)
+## [fromEventPattern](#)
 这个方法是个类事件使用。所谓的类事件就是指其行为跟事件相像，同时具有注册监听及移除监听两种行为，就像 DOM Event 有 addEventListener 及 removeEventListener 一样！
 ```` javascript
 class Producer {
@@ -174,7 +174,7 @@ const observable = Observable
     eggHead.removeListener.bind(eggHead)(handler)
   )
 ````
-## [empty](#Creation Operator)
+## [empty](#)
 `Observable` 进入 `complete` ！
 ```` javascript
 const observable = Observable
@@ -192,7 +192,7 @@ const observable = Observable
   });
 // complete
 ````
-## [never](#Creation Operator)
+## [never](#)
 `Observable` 处于永久的等待状态，没有明确的时间！
 ```` javascript
 const observable = Observable
@@ -209,7 +209,7 @@ const observable = Observable
     }
   });
 ````
-## [throw](#Creation Operator)
+## [throw](#)
 `Observable` 抛出错误，进入 `error` 状态!
 ```` javascript
 const observable = Observable
@@ -227,7 +227,7 @@ const observable = Observable
   });
 // 抛出错误！ 
 ````
-## [interval](#Creation Operator)
+## [interval](#)
 如同 JavaScript 的 `setInterval` 建立一个持续的行为！接收一个 `ms`计量单位的数值！
 ```` javascript
 const observable = Observable
@@ -248,7 +248,7 @@ const observable = Observable
 // 2
 // ...
 ````
-## [timer](#Creation Operator)
+## [timer](#)
 如同 JavaScript 的 `setInterval` 建立一个持续的行为！接收一个 `ms`计量单位的数值！
 > timer 第一个参数除了可以是数值（Number）之外，也可以是日期(Date)，它会等到指定的时间再发送第一个值。
 ```` javascript
@@ -270,7 +270,7 @@ const observable = Observable
 // 2
 // ...
 ````
-## [unsubscribe](#Creation Operator)
+## [unsubscribe](#)
 订阅 `Observable` 之后就会回传一个物件，这个物件就是用来取消订阅的。
 ```` javascript
 const observable = Observable
