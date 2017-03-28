@@ -1,17 +1,10 @@
 import { Observable } from 'rxjs';
 
-
-const observable = Observable
-  .interval(1000)
-  .mapTo( 2)
+const source1 = Observable.interval(500).take(4);
+const source2 = Observable.interval(1000).take(3);
+const source = source1.withLatestFrom(source2, (x,y) => x+y)
   .subscribe({
-    next: value => {
-      console.log(value);
-    },
-    complete: () => {
-      console.log('complete');
-    },
-    error: error => {
-      console.log(error);
-    }
-  });
+  next: (value) => { console.log(value); },
+  error: (err) => { console.log('Error: ' + err); },
+  complete: () => { console.log('complete'); }
+});
