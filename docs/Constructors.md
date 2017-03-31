@@ -1,14 +1,14 @@
 # [Method Summary](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html)
-| Method | Parameter|
-|----------|--------------------|
-|___[$$observable]___|(): Observable <br/>*一个互操作点es7-observable定义的规范: https://github.com/zenparsing/es-observable*|
-|***audit***|(durationSelector: function(value: T): SubscribableOrPromise): Observable<T> <br/>_忽略上下文的Observable的间隔，而遵从参数内的Observable的间隔_|
-|***auditTime***|(duration: number, scheduler: Scheduler): Observable<T> <br/>_忽略上下文的Observable的间隔，而遵从参数内Number(ms)间隔_|
-|***buffer***|(closingNotifier: Observable<any>): Observable<T[]> <br/>_接收一个 Observable 参数，每次这个参数发送数据时，会将主体此时间内`cache`的数据转为数组发送。_|
-|***bufferCount***|(bufferSize: number, startBufferEvery: number): Observable<T[]> <br/>_参数一：当发送数据个数达到时发送，参数二：开始的位置（它的倍数）_|	
-|***bufferTime***|(bufferTimeSpan: number, bufferCreationInterval: number, maxBufferSize: number, scheduler: Scheduler): Observable<T[]> <br/>_参数一：首次取值间隔。参数二：往后间隔。参数三：每次取值的个数_|	
-|***bufferToggle***|(openings: SubscribableOrPromise<O>, closingSelector: function(value: O): SubscribableOrPromise): Observable<T[]> <br/>_~~感觉不太常用~~_|	
-|***bufferWhen***|(closingSelector: function(): Observable): Observable<T[]> <br/>_类似`bufferTime`.但运作方式不同。开始会创建缓冲区，每次调用`callback`它会关闭缓冲区时。然后发送数据，又立即打开一个新的缓冲区并重复该过程。_|	
+| Method | Parameter| Return |
+|----------|--------------------|----------|
+|[$$observable]|() <br/>一个互操作点es7-observable定义的规范: https://github.com/zenparsing/es-observable|Observable|
+|***audit***|(durationSelector: function(value: T): SubscribableOrPromise)<T> <br/>忽略上下文的Observable的间隔，而遵从参数内的Observable的间隔|Observable|
+|***auditTime***|(duration: number, scheduler: Scheduler) <br/>忽略上下文的Observable的间隔，而遵从参数内Number(ms)间隔|Observable<T>|
+|***buffer***|(closingNotifier: Observable<any>) <br/>接收一个 Observable 参数，每次这个参数发送数据时，会将主体此时间内`cache`的数据转为数组发送。|Observable<T[]>|
+|***bufferCount***|(bufferSize: number, startBufferEvery: number) <br/>参数一：当发送数据个数达到时发送，参数二：开始的位置（它的倍数）|Observable<T[]>|
+|***bufferTime***|(bufferTimeSpan: number, bufferCreationInterval: number, maxBufferSize: number, scheduler: Scheduler) <br/>参数一：首次取值间隔。参数二：往后间隔。参数三：每次取值的个数|	Observable<T[]>|
+|***bufferToggle***|(openings: SubscribableOrPromise<O>, closingSelector: function(value: O): SubscribableOrPromise) <br/>|	Observable<T[]>|
+|***bufferWhen***|(closingSelector: function(): Observable) <br/>类似`bufferTime`.但运作方式不同。开始会创建缓冲区，每次调用`callback`它会关闭缓冲区时。然后发送数据，又立即打开一个新的缓冲区并重复该过程。|	Observable<T[]>|
 
 |***constructor***||``|__|	
 catch(selector: function): Observable
