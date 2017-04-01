@@ -1,31 +1,12 @@
-import { Observable, Subject } from 'rxjs';
+import Rx from 'rxjs/Rx';
+// 可加工回传的参数，返回新的 Observable.
+// const project = (x,y,z) => `${x},${y},${z}`;
 
-const source = Observable.zip(Observable.timer(1000,500),Observable.of(1,2,31,3,1), (x,y) => y);
+// 每次点击发出一次数据
+const sourceSelector = Rx.Observable.fromEvent(document, 'click');
+// 每次 sourceSelector 发出数据，都需要等待500ms。
+// 没有队列的概念，在等待的过程中无论 sourceSelector 触发多少次，都不会加入队列。
+const source = sourceSelector.debounceTime(500);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-source.subscribe({
-  next: value => {
-    console.log('next:', value);
-  },
-  complete: () => {
-    console.log(`complete!!!`);
-  },
-  error: error => {
-    console.log(`error:`, error);
-  }
-});
+source.subscribe(x => console.log(x));
+// MouseEvent // MouseEvent

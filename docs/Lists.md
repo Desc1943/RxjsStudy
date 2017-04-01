@@ -1,273 +1,212 @@
-## [Public Static](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html)
+## [Method](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html)
 | Method | Parameter  | Return |
 |----------|----------|----------|
-|[bindCallback](#bindcallback)|__func__: function,<br/> __selector__: function,<br/> __scheduler__: Scheduler|function(...params: *): Observable|
-|[bindNodeCallback](#bindnodecallback)|__func__: function,<br/> __selector__: function,<br/> __scheduler__: Scheduler|function(...params: *): Observable|
-|[combineLatest](#combinelatest)|__observable1__: ObservableInput,<br/> __observable2__: ObservableInput,<br/> __project__: function,<br/> __scheduler__: Scheduler|Observable|
-|[concat](#concat)|__input1__: ObservableInput,<br/> __input2__: ObservableInput,<br/> __scheduler__: Scheduler|Observable|
-|[create](#create)|__onSubscription__: function(observer: Observer): TeardownLogic|Observable|
-|[defer](#defer)|__observableFactory__: function(): SubscribableOrPromise|Observable|		
-|[empty](#empty)|__scheduler__: Scheduler|Observable|		
-|forkJoin|__sources__: *|any|		
-|[from](#from)|__ish__: ObservableInput<T>,<br/> __scheduler__: Scheduler|Observable<T>|	
-|[fromEvent](#fromevent)|__target__: EventTargetLike,<br/> __eventName__: string,<br/> __options__: EventListenerOptions,<br/> __selector__: SelectorMethodSignature<T>|Observable<T>|	
-|[fromEventPattern](#fromeventpattern)|__addHandler__: function(handler: Function): any,<br/> __removeHandler__: function(handler: Function, signal?: any): void,<br/> __selector__: function(...args: any): T|Observable<T>|
-|[fromPromise](#frompromise)|__promise__: Promise<T>,<br/> __scheduler__: Scheduler|Observable<T>|	
-|[interval](#interval)|__period__: number,<br/> __scheduler__: Scheduler|Observable|	
-|[merge](#merge)|__observables__: ...ObservableInput,<br/> __concurrent__: number,<br/> __scheduler__: Scheduler|Observable|	
-|[never](#never)|()|Observable|	
-|[of](#of)|__values__: ...T,<br/> __scheduler__: Scheduler|Observable<T>|	
-|[range](#range)|__start__: number,<br/> __count__: number,<br/> __scheduler__: Scheduler|Observable|	
-|[throw](#throw)|__error__: any,<br/> __scheduler__: Scheduler|Observable|	
-|[timer](#timer)|__initialDelay__: number/Date,<br/> __period__: number,<br/> __scheduler__: Scheduler|Observable|
-|[webSocket](#websocket)|__urlConfigOrSource__: string/WebSocketSubjectConfig|WebSocketSubject|	
-|[zip](#zip)|__observables__: *|Observable<R>|
+|[audit](#audit)|__durationSelector__: function(value: T): SubscribableOrPromise|Observable<T>|
+|[auditTime](#audittime)|__duration__: number,<br/> __scheduler__: Scheduler|Observable<T>|
+|[buffer](#buffer)|__closingNotifier__: Observable<any>|Observable<T[]>|
+|[bufferCount](#buffercount)|__bufferSize__: number,<br/> __startBufferEvery__: number|Observable<T[]>|
+|[bufferTime](#buffertime)|__bufferTimeSpan__: number,<br/> __bufferCreationInterval__: number,<br/> __maxBufferSize__: number,<br/> __scheduler__: Scheduler|Observable<T[]>|
+|[bufferToggle](#buffertoggle)|__openings__: SubscribableOrPromise<O>,<br/> __closingSelector__: function(value: O): SubscribableOrPromise|Observable<T[]>|
+|[bufferWhen](#bufferwhen)|__closingSelector__: function(): Observable|Observable<T[]>|
+|[catch](#catch)|__selector__: function|Observable|
+|[combineAll](#combineall)|__project__: function|Observable|
+|[combineLatest](#combinelatest)|__other__: ObservableInput,<br/> __project__: function|Observable|
+|[concat](#concat)|__other__: ObservableInput,<br/> __scheduler__: Scheduler|Observable|
+|[concatAll](#concatall)|()|Observable|
+|[concatMap](#concatmap)|__project__: function(value: T, ?index: number): ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any|Observable|
+|[concatMapTo](#concatmapto)|__innerObservable__: ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any|Observable|
+|[count](#count)|__predicate__: function(value: T, i: number, source: Observable<T>): boolean|Observable|
+|[debounce](#debounce)|__durationSelector__: function(value: T): SubscribableOrPromise|Observable|
+|[debounceTime](#debouncetime)|__dueTime__: number,<br/> __scheduler__: Scheduler|Observable|
+|[defaultIfEmpty](#defaultifempty)|__defaultValue__: any|Observable|
+|[delay](#delay)|__delay__: number/Date,<br/> __scheduler__: Scheduler|Observable|
+|[delayWhen](#delaywhen)|__delayDurationSelector__: function(value: T): Observable,<br/> __subscriptionDelay__: Observable|Observable|
+|[dematerialize](#dematerialize)|()|Observable|
+|[distinct](#distinct)|__keySelector__: function,<br/> __flushes__: Observable|Observable|
+|[distinctUntilChanged](#distinctuntilchanged)|__compare__: function|Observable|
+|[distinctUntilKeyChanged](#distinctuntilkeychanged)|__key__: string,<br/> __compare__: function|Observable|
+|[do](#do)|__nextOrObserver__: Observer/function, error: function,<br/> __complete__: function|Observable|
+|[elementAt](#elementat)|__index__: number,<br/> __defaultValue__: T|Observable|
+|[every](#every)|__predicate__: function,<br/> __thisArg__: any|Observable|
+|[exhaust](#exhaust)|()|Observable|
+|[exhaustMap](#exhaustmap)|__project__: function(value: T, ?index: number): ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any|Observable|
+|[expand](#expand)|__project__: function(value: T, index: number),<br/> __concurrent__: number,<br/> __scheduler__: Scheduler|Observable|
+|[filter](#filter)|__predicate__: function(value: T, index: number): boolean,<br/> __thisArg__: any|Observable|
+|[find](#find)|predicate: __function__(value: T, index: number, source: Observable<T>): boolean,<br/> __thisArg__: any|Observable<T>|
+|[findIndex](#findindex)|__predicate__: function(value: T, index: number, source: Observable<T>): boolean,<br/> __thisArg__: any|Observable|
+|[first](#first)|__predicate__: function(value: T, index: number, source: Observable<T>): boolean,<br/> __resultSelector__: function(value: T, index: number): R, defaultValue: R|Observable<T/R>|
+|[forEach](#foreach)|__next__: Function,<br/> __PromiseCtor__: PromiseConstructor|Promise|
+|[groupBy](#groupby)|__keySelector__: function(value: T): K,<br/> __elementSelector__: function(value: T): R,<br/> __durationSelector__: function(grouped: GroupedObservable<K, R>): Observable<any>|Observable<GroupedObservable<K, R>>|
+|[ignoreElements](#ignoreelements)|()|Observable|
+|[isEmpty](#isempty)|()|Observable|
+|[last](#last)|__predicate__: function|Observable|
+|[letProto](#letproto)|__func__: *|Observable<R>|
+|[lift](#lift)|__operator__: Operator|Observable|
+|[map](#map)|__project__: function(value: T, index: number): R,<br/> __thisArg__: any|Observable<R>|
+|[mapTo](#mapto)|__value__: any|Observable|
+|[materialize](#materialize)|()|Observable<Notification<T>>|
+|[max](#max)|__comparer__: Function|Observable|
+|[merge](#merge)|__other__: ObservableInput,<br/> __concurrent__: number,<br/> __scheduler__: Scheduler|Observable|
+|[mergeAll](#mergeall)|__concurrent__: number|Observable|
+|[mergeMap](#mergemap)|__project__: function(value: T, ?index: number): ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any,<br/> __concurrent__: number|Observable|
+|[mergeMapTo](#mergemapto)|__innerObservable__: ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any,<br/> __concurrent__: number|Observable|
+|[mergeScan](#mergescan)|__accumulator__: function(acc: R, value: T): Observable<R>,<br/> __seed__: *,<br/> __concurrent__: number|Observable<R>|
+|[min](#min)|__comparer__: Function|Observable<R>|
+|[multicast](#multicast)|__subjectOrSubjectFactory__: Function/Subject, selector: Function|Observable|
+|[observeOn](#observeon)|__scheduler__: *,<br/> __delay__: *| Observable<R>/WebSocketSubject<T>/Observable<T>|
+|[pairwise](#pairwise)|()|Observable<Array<T>>|
+|[partition](#partition)|__predicate__: function(value: T, index: number): boolean,<br/> __thisArg__: any| [Observable<T>, Observable<T>]|
+|[pluck](#pluck)|__properties__: ...string|Observable|
+|[publish](#publish)|__selector__: Function|*|
+|[publishBehavior](#publishbehavior)|__value__: *|ConnectableObservable<T>|
+|[publishLast](#publishlast)|()|ConnectableObservable<T>|
+|[publishReplay](#publishreplay)|__bufferSize__: *,<br/> __windowTime__: *,<br/> __scheduler__: *|ConnectableObservable<T>|
+|[race](#race)|()|Observable|
+|[reduce](#reduce)|__accumulator__: function(acc: R, value: T, index: number): R,<br/> __seed__: R|Observable<R>|
+|[repeat](#repeat)|__count__: number|Observable|
+|[repeatWhen](#repeatwhen)|__notifier__: function(notifications: Observable): Observable|Observable|
+|[retry](#retry)|__count__: number|Observable|
+|[retryWhen](#retrywhen)|__notifier__: function(errors: Observable): Observable|Observable|
+|[sample](#sample)|__notifier__: Observable<any>|Observable<T>|
+|[sampleTime](#sampletime)|__period__: number,<br/> __scheduler__: Scheduler|Observable<T>|
+|[scan](#scan)|__accumulator__: function(acc: R, value: T, index: number): R,<br/> __seed__: T/R|Observable<R>|
+|[sequenceEqual](#sequenceequal)|__compareTo__: Observable,<br/> __comparor__: function|Observable|
+|[share](#share)|()|Observable<T>|
+|[single](#single)|__predicate__: Function|Observable<T>|
+|[skip](#skip)|__count__: Number|Observable|
+|[skipUntil](#skipuntil)|__notifier__: Observable|Observable<T>|
+|[skipWhile](#skipwhile)|__predicate__: Function|Observable<T>|
+|[startWith](#startwith)|__values__: ...T,<br/> __scheduler__: Scheduler|Observable|
+|[subscribeOn](#)|__scheduler__: Scheduler|Observable<T>|
+|[switch](#switch)|()|Observable<T>|
+|[switchMap](#switchmap)|__project__: function(value: T, ?index: number): ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any|Observable|
+|[switchMapTo](#switchmapto)|__innerObservable__: ObservableInput,<br/> __resultSelector__: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any|Observable|
+|[take](#take)|__count__: number|Observable<T>|
+|[takeLast](#takelast)|__count__: number|Observable<T>|
+|[takeUntil](#takeuntil)|__notifier__: Observable|Observable<T>|
+|[takeWhile](#takewhile)|__predicate__: function(value: T, index: number): boolean|Observable<T>|
+|[throttle](#throttle)|__durationSelector__: function(value: T): SubscribableOrPromise|Observable<T>|
+|[throttleTime](#throttletime)|__duration__: number,<br/> __scheduler__: Scheduler|Observable<T>|
+|[timeInterval](#timeinterval)|__scheduler__: *|Observable<TimeInterval<any>>/WebSocketSubject<T>/Observable<T>|
+|[timeout](#timeout)|__due__: number,<br/> __scheduler__: Scheduler|Observable<R>/WebSocketSubject<T>/Observable<T>|
+|[timeoutWith](#timeoutwith)|__due__: *,<br/> __withObservable__: *,<br/> __scheduler__: *|Observable<R>/WebSocketSubject<T>/Observable<T>|
+|[timestamp](#timestamp)|__scheduler__: *|Observable<Timestamp<any>>/WebSocketSubject<T>/Observable<T>|
+|[toArray](#toarray)|()| Observable<any[]>/WebSocketSubject<T>/Observable<T>|
+|[toPromise](#topromise)|__PromiseCtor__: *|Promise<T>|
+|[window](#window)|__windowBoundaries__: Observable<any>| Observable<Observable<T>>|
+|[windowCount](#)|__windowSize__: number,<br/> __startWindowEvery__: number|Observable<Observable<T>>|
+|[windowToggle](#windowtoggle)|__openings__: Observable<O>,<br/> __closingSelector__: function(value: O): Observable|Observable<Observable<T>>|
+|[windowWhen](#windowwhen)|__closingSelector__: function(): Observable|Observable<Observable<T>>|
+|[withLatestFrom](#withlatestfrom)|__other__: ObservableInput,<br/> __project__: Function|Observable|
+|[zipAll](#zipall)|__project__: *|Observable<R>/WebSocketSubject<T>/Observable<T>|
+|[zipProto](#zipproto)|__observables__: *s|Observable<R>|
 
-### [bindCallback](#)
-绑定一个方法，返回一个`callback`。
+### [audit](#)
+> (durationSelector: function(value: T): SubscribableOrPromise): Observable<T>
+
+忽略由另一个可观察确定的持续时间的源值，然后从源可见的最新值中释放，然后重复此过程。
+> 就像auditTime，但沉默持续时间是由最新的观察确定。
 ```javascript
-function someFunction(value) {
-  console.log(value);
-}
-const source = Observable.bindCallback(someFunction)('next');
-// next
+Observable.interval(500).audit(() => Observable.fromEvent(document, 'click'));
+// 1 // 3
 ```
-> See: [bindNodeCallback](#bindnodecallback), [from](#from), [fromPromise](#frompromise)
-
-### [bindNodeCallback](#)
-就像bindCallback一样，但是回调返回是回调类型（error, result）
-> 将Node.js样式的回调API转换为返回Observable的函数
-```javascript
-function someFunction(value) {
-  console.log(value);
-}
-const source = Observable.bindNodeCallback(someFunction)('next');
-// next
+> 此时 Marble diagrams:
 ```
-> See: [bindCallback](#bindcallback), [from](#from), [fromPromise](#frompromise)
+Obs1:   -----0-----1-----2-----3-----4--...
+Obs2:   ----------c----------c|
+        Obs1.audit(() => Obs2)
+source: ----------1----------3|
+```
+> See: [auditTime](#audittime), [debounce](#debounce), [delayWhen](#delaywhen), [sample](#sample), [throttle](#throttle)
 
-### [combineLatest](#)
-组合多个Observables创建一个Observable，其值根据每个输入Observable的最新值计算。
-> 每当任何输入Observable发出值时，它将使用所有输入中的最新值计算公式，然后发出该公式的输出。
+### [auditTime](#)
+> (duration: number, scheduler: Scheduler): Observable<T>
+
+忽略持续时间(ms)的源值，然后从可观察源发出最新值，然后重复此过程。
+> 就像audit，但沉默持续时间是由传参 Number(ms) + 忽略的时间(ms)。
 ```javascript
-const source = Observable.combineLatest(
-  Observable.interval(200),
-  Observable.timer(400, 200)
+Observable.interval(200).auditTime(400);
+// 2 // 5 // 8 ...
+```
+> 此时 Marble diagrams:
+```
+Obs1:   --0--1--2--3--4--5--6--7--8-...
+        auditTime(400)
+source: ------2------5------8--|
+```
+> See: [audit](#audit), [debounceTime](#debouncetime), [delay](#delay), [sampleTime](#sampletime), [throttleTime](#throttletime)
+
+### [buffer](#)
+> (closingNotifier: Observable<any>): Observable<T[]>
+
+将过去的值作为数组收集，并且只有当另一个观察到的发射时才发出该数组。
+> 取值为 Obs1 持续时间内发送的数据 cache 与 Obs2 时间间隔内的 开区间值。所以，但二点间有值则不取。
+```javascript
+Observable.interval(200).buffer(() => Observable.interval(400));
+// [0] // [1,2] // [3,4] ...
+```
+> 此时 Marble diagrams:
+```
+Obs1:   --0--1--2--3--4--5--6--7--8-...
+Obs2:   ----0----1----2----3----4--...
+        Obs1.buffer(Obs2)
+source: ----([0])----([1,2])----([3,4])--...
+```
+> See: [bufferCount](#buffercount), [bufferTime](#buffertime), [bufferToggle](#buffertoggle), [bufferWhen](#bufferwhen), [window](#window)
+
+### [bufferCount](#)
+> (bufferSize: number, startBufferEvery: number): Observable<T[]>
+
+缓冲源观测值直到尺寸最大命中缓存了。
+> 参数一：取的个数。 参数二：开始取的范围（以倍数增长,简单理解 0*200*4, 1*200*4...）
+```javascript
+Observable.interval(200).bufferCount(2,4);
+// [0,1] // [4,5] // [8,9] ...
+```
+> 此时 Marble diagrams:
+```
+Obs1:   --0--1--2--3--4--5--6--7--8-...
+        bufferCount(2,4)
+source: ----([0,1])--------([4,5])--------([8,9])...
+```
+> See: [buffer](#buffer), [bufferTime](#buffertime), [bufferToggle](#buffertoggle), [bufferWhen](#bufferwhen), [pairwise](#pairwise)
+, [windowCount](#windowcount)
+
+### [bufferTime](#)
+> (bufferTimeSpan: number, bufferCreationInterval: number, maxBufferSize: number, scheduler: Scheduler): Observable<T[]>
+
+将过去的值作为数组收集，并定期发送这些数组。
+> 像 `buffer` ，但它传入的是 Number(ms)
+```javascript
+Observable.interval(200).bufferTime(400);
+// [0] // [1,2] // [3,4] ...
+```
+> 此时 Marble diagrams:
+```
+Obs1:   --0--1--2--3--4--5--6--7--8-...
+Obs2:   ----0----1----2----3----4--...
+        Obs1.buffer(Obs2)
+source: ----([0])----([1,2])----([3,4])--...
+```
+> See: [buffer](#buffer), [bufferCount](#buffercount), [bufferToggle](#buffertoggle), [bufferWhen](#bufferwhen)
+
+### [bufferToggle](#)
+> (openings: SubscribableOrPromise<O>, closingSelector: function(value: O): SubscribableOrPromise): Observable<T[]>
+
+缓冲源观测值结束时,发出 closingSelector 输出。
+> 每次发出就会关闭 cache 等待下一次开启。切换业务逻辑使用？
+```javascript
+Observable.interval(200).bufferToggle(
+  Observable.interval(400).startWith('s'), 
+  x => {console.log(x)}
   );
-// [1,0] // [2,0] // [2,1] // [3,1] // [3,2]
+// s // 0 // [3,4] ...
 ```
 > 此时 Marble diagrams:
 ```
-Obs1:   --0--1--2--3--4-...
-Obs2:   ----0--1--2--3-...
-        combineLatest(Obs1, Obs2)
-source: ----([1,0])--([2,0])--([2,1])--([3,1])--([3,2])-...
+Obs1:   --0--1--2--3--4--5--6--7--8-...
+Obs2:   ----0----1----2----3----4--...
+        Obs1.buffer(Obs2)
+source: ----([0])----([1,2])----([3,4])--...
 ```
-> See: [combineAll](#combineall), [merge](#merge), [withLatestFrom](#withLatestfrom)
-
-### [concat](#)
-创建一个输出Observable，它依次从给定的Observable中发出所有的值，然后进入下一个。
-> 非并行（并行：merge）
-```javascript
-const source = Observable.concat(
-  Observable.interval(100).take(2),
-  Observable.interval(200).take(3)
-  );
-// 0 // 1 // 0 // 1 // 2 
-```
-> 此时 Marble diagrams:
-```
-Obs1:   -0-1|
-Obs2:   --0--1--2|
-        concat(Obs1, Obs2)
-source: -0-1--0--1--2|
-```
-> See: [concatAll](#concatall), [concatMap](#concatmap), [concatMapTo](#concatmapto)
-
-### [create](#)
-创建一个新的Observable，当Observer订阅它时，它将执行指定的函数。
-> 拥有一个 `callback(Observer)` Observer拥有 `next, error, complete`
-```javascript
-const source = Observable.create(function (observer) {
-  observer.next('next');
-  observer.complete('complete');
-});
-// next // complete
-```
-> See: [empty](#empty), [never](#never), [of](#of), [throw](#throw)
-
-### [defer](#)
-只有当它被订阅时，创建 Observable lazily 。
-> 返回一个 Observable 对象
-```javascript
-const source = Observable.defer(function () {
-  if (Math.random() > 0.5) {
-    return Observable.fromEvent(document, 'click');
-  } else {
-    return Observable.interval(1000);
-  }
-});
-```
-> See: [create](#create)
-
-### [empty](#)
-创建一个Observable，不会发送任何数据，并立即发出 `complete` 的通知。
-```javascript
-const source = Observable.empty().startWith('over');
-// over // complete
-```
-> See: [create](#create), [never](#never), [of](#of), [throw](#throw)
-
-### [from](#)
-从Array创建一个Observable，一个类似Array的对象，一个Promise，一个可迭代对象或一个Observable类对象。
-> 几乎任何东西都可以转换成Observable。
-```javascript
-const source = Observable.from([1,2,3]);
-// 1 // 2 // 3
-```
-> See: [create](#create), [fromEvent](#fromevent), [fromEventPattern](#fromeventpattern), [fromPromise](#frompromise)
-
-### [fromEvent](#)
-创建一个Observable，发出来自给定事件目标的特定类型的事件。
-> 非并行（并行：merge）
-```javascript
-const source = Observable.zip(
-  Observable.interval(1000),
-  Observable.fromEvent(document, 'click'),
-  (x,y) =>  [x,y]
-);
-// Event 
-```
-> 此时 Marble diagrams:
-```
-Obs1:   -0-1-2-3-4|
-Obs2:   --c---c|
-        zip(Obs1, Obs2, (x,y) => [x,y])
-source: --[0,e]---[1,e]|
-```
-> See: [from](#from), [fromEventPattern](#fromeventpattern)
-
-### [fromEventPattern](#)
-基于addHandler / removeHandler函数从API创建一个Observable。
-```javascript
-function addClickHandler(handler) {
-  document.addEventListener('click', handler);
-}
-function removeClickHandler(handler) {
-  document.removeEventListener('click', handler);
-}
-Observable.fromEventPattern(
-  addClickHandler,
-  removeClickHandler
-);
-```
-> See: [from](#from), [fromEvent](#fromevent)
-
-### [fromPromise](#)
-将 Promise 转换为 Observable.
-> 返回一个Observable，发出Promise解析的值，然后完成。
-```javascript
-Observable.fromPromise(fetch('http://myserver.com/'));
-```
-> See: [bindCallback](#bindcallback), [from](#from)
-
-### [interval](#)
-创建一个Observable，可以在指定的时间间隔内在指定的IScheduler上发送序列号。
-```javascript
-Observable.interval(1000);
-// 0 // 1 // 2...
-```
-> See: [timer](#timer), [delay](#delay)
-
-### [merge](#)
-创建一个输出Observable，它可以从每个给定的输入Observable中同时发出所有的值。
-> 可以通过 Number 参数，控制并行的 Observable 数量。通过一个，再进行下一个。
-```javascript
-Observable.merge(
-  Observable.interval(500).take(4),
-  Observable.interval(1000).take(2),
-  Observable.interval(300).take(3),
-  2
-);
-// 0 // 1 // 0 // 2 // 3 // 1 // 0 // 1 // 2
-```
-> 此时 Marble diagrams:
-```
-Obs1:   -----0-----1-----2-----3|
-Obs2:   ----------0----------1|
-Obs2:   ---0---1---2|
-        merge(Obs1, Obs2, Obs3, 2)
-source: -----0-----(1,0)-----2-----(3,1)---0---1---2|
-```
-> See: [mergeAll](#mergeall), [mergeMap](#mergemap), [mergeMapTo](#mergemapto), [mergeScan](#mergescan)
-
-### [never](#)
-创建一个Observable，它不会发送任何数据。
-> 它和  `empty` 最大的区别在于，它不会发出 `complete` 的通知。
-```javascript
-const source = Observable.never().startWith('over');
-// over
-```
-> See: [create](#create), [empty](#empty), [of](#of), [throw](#throw)
-
-### [of](#)
-创建一个Observable，发出一些您指定为参数的值，一个接着一个，然后发出一个完整的通知。
-> 它和  `from` 最大的区别在于，它以一个个参数的形式进入，而不是以Array.
-```javascript
-const source = Observable.of(1,2,3);
-// 1 // 2 // 3
-```
-> See: [create](#create), [empty](#empty), [never](#never), [throw](#throw)
-
-### [range](#)
-创建一个Observable，发出指定范围内的数字序列。
-> 开始的范围和输出的个数。
-```javascript
-Observable.range(5,3);
-// 5 // 6 // 7 // 8
-```
-> See: [timer](#timer), [interval](#interval)
-
-### [throw](#)
-创建一个Observable，它不会发送任何数据，但会立即发出错误通知。
-> 它和  `empty` 最大的区别在于，它发出的是 `error` 的通知。
-```javascript
-const source = Observable.throw().startWith('over');
-// over // error
-```
-> See: [create](#create), [empty](#empty), [never](#never), [of](#of)
-
-### [timer](#)
-创建一个可以在初始发射时间的Observable，并在此后的每个间隔内发送数据。
-> 它像 `interval`，但你可以指定何时发送数据。
-```javascript
-Observable.timer(1000,500);
-// 0 // 1 // 2 // 3...
-```
-> 此时 Marble diagrams:
-```
-Obs:   ----------0-----1-----2-----3...
-```
-> See: [interval](#interval), [delay](#delay)
-
-### [webSocket](#)
-对w3c兼容的WebSocket进行包装。
-
-### [zip](#)
-组合多个可观察值来创建一个Observable，其值根据每个输入的数值计算得出。
-> 如果最新的参数是一个函数，则该函数用于从输入值计算创建的值。否则返回输入值的数组。
-```javascript
-Observable.zip(
-  Observable.timer(1000,500),
-  Observable.of('a','c','b','d'),
-  (x, y) => y
-  );
-// a // c // b // d
-```
-> 此时 Marble diagrams:
-```
-Obs1:   ----------0-----1-----2-----3...
-Obs1:   (a,c,b,d)|
-        zip(Obs1,Obs2,(x,y) => y)
-source: ----------a-----c-----b-----d|
-```
+> See: [buffer](#buffer), [bufferCount](#buffercount), [bufferToggle](#buffertoggle), [bufferWhen](#bufferwhen)
