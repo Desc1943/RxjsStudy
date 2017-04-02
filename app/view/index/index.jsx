@@ -1,19 +1,14 @@
 import Rx from 'rxjs/Rx';
 
-const source = Rx.Observable
-  .from([
-    Rx.Notification.createNext('SUCCESS'),
-    Rx.Notification.createError('ERROR!')
-  ])
-  // 把 notification object 变成 notification values
-  .dematerialize();
-
-// 输出：`NEXT VALUE: SUCCESS' 'ERROR VALUE: 'ERROR!'
-source.subscribe({
-  next: val => console.log(`NEXT VALUE: ${val}`),
-  error: val => console.log(`ERROR VALUE: ${val}`),
+var clicks = Rx.Observable.fromEvent(document, 'click');
+var higherOrder = Rx.Observable.interval(200).take(8).map((ev) => {
+  console.log(ev);
+  return clicks.map(x => ev);
 });
+var source = higherOrder.combineAll();
 
-
-//source.subscribe(val => {console.log(val)});
-// 0 // 1 // 2
+source.subscribe({
+  next: next => console.log(next),
+  error: error => console.error(`Error: ${error}`),
+  complete: () => console.info('Complete!')
+});
