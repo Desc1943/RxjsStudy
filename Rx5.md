@@ -19,6 +19,7 @@
 - [delay](#delay)
 - [delayWhen](#delaywhen)
 - [dematerialize](#dematerialize)
+- [distinct](#distinct)
 - [distinctUntilChanged](#distinctuntilchanged)
 - [do](#do)
 - [every](#every)
@@ -77,9 +78,9 @@ source.subscribe(val => { console.log(val)})
 > 此时 Marble diagrams:
 ```
 Obs1:   -----0-----1-----2-----3-----4-----5--...
-Obs2:   ------c------------c|
+Obs2:   ------c--c----------c|
         Obs1.buffer(Obs2)
-source: ------([0])------------([1,2])|
+source: ------([0])--([])----------([1,2])|
 ```
 
 #### bufferCount
@@ -89,6 +90,7 @@ source: ------([0])------------([1,2])|
 ([demo1](http://jsbin.com/futibak/2/edit?js,console)| ([demo2](http://jsbin.com/futibak/3/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-bufferCount))
 
 > `bufferCount` 的第2个参数：第一次之后新缓冲区的间隔。
+> `bufferCount` 的第3个参数：间隔内最大输出数据的个数。
 ```javascript
 // 创建一个 Observable ，每500毫秒 发出一个值。
 const Obs1 = Rx.Observable.interval(500);
@@ -146,8 +148,7 @@ source: -----([0,1])----------([4,5,6])----------([9,10,11])---...
 #### bufferToggle
 ##### signature: `bufferToggle(openings: SubscribableOrPromise<O>, closingSelector: function(value: O): SubscribableOrPromise): Observable<T[]>`
 
-打开 buffer ，使其捕捉 source emit 的值，关闭 buffer ，使其 emit 缓冲的值。
-
+打开 buffer ，使其捕捉 source emit 的值，关闭 buffer ，使其 emit 缓冲的值。  
 ([demo](http://jsbin.com/futibak/6/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-bufferToggle))
 
 ```javascript
@@ -356,8 +357,7 @@ latest:         -----([0,2],[0,1])-----([1,2],[1,1])|
 #### concatMapTo
 ##### signature: `concatMapTo(innerObservable: ObservableInput, resultSelector: function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any): Observable`
 
-当 source emit 的时候，总是 subscribe 相同的 Observable ，当 complete 时合并结果
-
+当 source emit 的时候，总是 subscribe 相同的 Observable ，当 complete 时合并结果  
 ([demo](http://jsbin.com/futibak/15/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-concatMapTo))
 > 如果 sourceSelector 的速度比 startInterval 快，它会导致内存问题。内部观测值聚集在一个无限的缓冲区等待订阅。
 ```javascript
@@ -456,95 +456,121 @@ latest:           -------e---------------e|
 #### defaultIfEmpty
 ##### signature: `defaultIfEmpty(defaultValue: any): Observable`
 
-当 Observable 为空时，使用这个设定的默认值，否则值为 `null` 。
-
-([demo](http://jsbin.com/ricotitasu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-defaultIfEmpty))
+当 Observable 为空时，使用这个设定的默认值，否则值为 `null` 。  
+([demo](http://jsbin.com/futibak/19/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-defaultIfEmpty))
 
 ```javascript
-const empty = Rx.Observable.of()
-// 当 source Observable 的值为空时，使用这个默认值
-const exampleOne = empty.defaultIfEmpty('Observable.of() Empty!')
-// 输出：'Observable.of() Empty!'
-const subscribe = exampleOne.subscribe(val => console.log(val))
+// 无值，进入complete 状态。 与 of() 同机制
+const sourceSelector = Rx.Observable.empty();
+// 捕捉无值，发出默认值
+const source = sourceSelector.defaultIfEmpty('默认值:empty');
 
-// 空的 Observable
-const emptyTwo = Rx.Observable.empty()
-const exampleTwo = emptyTwo.defaultIfEmpty('Observable.empty()!')
-// 输出：'Observable.empty()!'
-const subscribe = exampleTwo.subscribe(val => console.log(val))
+source.subscribe(val => {console.log(val)});
+// 默认值:empty （进入complete）
 ```
 
 #### delay
 ##### signature: `delay(delay: number | Date, scheduler: Scheduler): Observable`
 
-延迟 Observable emit 的时间。
-
-([demo](http://jsbin.com/zebatixije/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-delay))
-
+延迟 Observable emit 的时间。  
+([demo](http://jsbin.com/futibak/20/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-delay))
+> 可以时日期型，指定日期触发。
 ```javascript
-const example = Rx.Observable.of(null)
+// 数据源发出数据 `start`
+const sourceSelector = Rx.Observable.of('start');
+// 测试二个不同的延迟方式
+const source = Rx.Observable.merge(
+  // 无延迟直接发出
+  sourceSelector,
+  // 延迟 1000ms 发出
+  sourceSelector.delay(1000),
+  // 延迟 现在时间+2000ms 发出
+  sourceSelector.delay(new Date(new Date().getTime() + 2000))
+);
 
-const merge = example.merge(
-  example.mapTo('Hello'),
-  example.mapTo('World').delay(1000),
-  example.mapTo('Goodbye').delay(2000),
-  example.mapTo('World!').delay(3000)
-)
-
-// 输出：'Hello'...'World'...'Goodbye'...'World!'
-const subscribe = merge.subscribe(val => console.log(val))
+source.subscribe(val => {console.log(val)});
+// start // start // start
 ```
 
 #### delayWhen
-##### signature: `delayWhen(selector: Function, sequence: Observable): Observable`
+##### signature: `delayWhen(delayDurationSelector: function(value: T): Observable, subscriptionDelay: Observable): Observable`
 
-根据指定的函数，延迟 emit 的时间。
-
-([demo](http://jsbin.com/topohekuje/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-delayWhen))
+像`delay`,但它的时间是根据指定的函数返回的 Observable 决定延迟 emit 的时间。  
+([demo](http://jsbin.com/futibak/21/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-delayWhen))
 
 ```javascript
-// 每隔1s emit 一个值
-const message = Rx.Observable.interval(3000)
-// 在5s后 emit 值
-const delayForFiveSeconds = () => Rx.Observable.timer(5000)
-// 在5s后，开始 emit 值
-const delayWhenExample = message.delayWhen(delayForFiveSeconds)
+// 每秒发出一次值
+const sourceSelector = Rx.Observable.interval(1000);
+// 在3s后发出值
+const delayDurationSelector = () => Rx.Observable.timer(3000);
+// 在3s后，开始进入 sourceSelector 发出值
+const source = sourceSelector.delayWhen(delayDurationSelector);
 
-// 输出：延迟5s后，
-// 5s....1...2...3
-const subscribe = delayWhenExample.subscribe(val => console.log(val))
+source.subscribe(val => {console.log(val)});
+// 0 // 1 // 2
+```
+> Marble diagrams:
+```
+sourceSelector:   ----------0----------1----------2---...
+                  sourceSelector.delayWhen(delayDurationSelector)
+latest:           ----------------------------------------0----------1----------2--...
 ```
 
 #### dematerialize
-##### sigature: `dematerialize(): Observable`
+##### signature: `dematerialize(): Observable`
 
-把 notification object 变成 notification values
-
-([demo](http://jsbin.com/vafedocibi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-dematerialize))
+把 notification object 变成 notification values  
+([demo](http://jsbin.com/futibak/22/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-dematerialize))
 
 ```javascript
-// emit next notification 和 error notification
+// 发出 next notification 和 error notification
 const source = Rx.Observable
   .from([
     Rx.Notification.createNext('SUCCESS'),
     Rx.Notification.createError('ERROR!')
   ])
   // 把 notification object 变成 notification values
-  .dematerialize()
-  
-// 输出：`NEXT VALUE: SUCCESS' 'ERROR VALUE: 'ERROR!'
-const subscriptionn = source.subscribe({
+  .dematerialize();
+source.subscribe({
   next: val => console.log(`NEXT VALUE: ${val}`),
   error: val => console.log(`ERROR VALUE: ${val}`),
-})
+});
+// NEXT VALUE: SUCCESS // ERROR VALUE: 'ERROR!
+```
+#### distinct
+##### signature: `distinct(keySelector: function, flushes: Observable): Observable`
+
+只有当前的值与上个值不同，才 emit 。  
+([demo](http://jsbin.com/vafedocibi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-distinct))
+
+```javascript
+// 仅仅输出那些与上个值不同的值
+const myArrayWithDuplicatesInARow = Rx.Observable
+  .from([1, 1, 2, 2, 3, 1, 2, 3])
+  
+const distinctSub = myArrayWithDuplicatesInARow
+  .distinctUntilChanged()
+  // 输出：1, 2, 3, 1, 2, 3
+  .subscribe(val => console.log('DISTINCT SUB: ', val))
+  
+const nonDistinctSub = myArrayWithDuplicatesInARow
+  // 输出：1, 1, 2, 2, 3, 1, 2, 3
+  .subscribe(val => console.log('NON DISTINCT SUB:', val))
+  
+const sampleObject = { name: 'Test' }
+const myArrayWithDuplicateObjects = Rx.Observable.from([sampleObject, sampleObject])
+
+const nonDisinctObjects = myArrayWithDuplicateObjects
+  .distinctUntilChanged()
+  // 输出：`DISTINCT OBJECTS: { name: 'Test' }`
+  .subscribe(val => console.log('DISTINCT OBJECTS', val))
 ```
 
 #### distinctUntilChanged
 ##### signature: `distinctUntilChanged(compare: function): Observable`
 
-只有当前的值与上个值不同，才 emit 。
-
-([demo](http://jsbin.com/vafedocibi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-dematerialize))
+只有当前的值与上个值不同，才 emit 。  
+([demo](http://jsbin.com/vafedocibi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-distinctUntilChanged))
 
 ```javascript
 // 仅仅输出那些与上个值不同的值
@@ -572,9 +598,8 @@ const nonDisinctObjects = myArrayWithDuplicateObjects
 #### do
 ##### signature: `do(nextOrObserver: function, error: function, complete: function): Observable`
 
-显式地进行某些 action ，比如 logging
-
-([demo](http://jsbin.com/jimazuriva/1/edit?js,console) | [docs](https://github.com/ReactiveX/rxjs/blob/master/src/operator/do.ts))
+显式地进行某些 action ，比如 logging  
+([demo](http://jsbin.com/jimazuriva/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-do))
 
 ```javascript
 const source = Rx.Observable.of(1, 2, 3, 4, 5)
@@ -592,8 +617,7 @@ const subscribe = example.subscribe(val => console.log(val))
 #### every
 ##### signature: `every(predicate: function, thisArg: any): Observable`
 
-检测是否「所有 emit 的值」都符合某个条件。
-
+检测是否「所有 emit 的值」都符合某个条件。  
 ([demo](http://jsbin.com/mafacebuwu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-every))
 
 ```javascript
@@ -619,8 +643,7 @@ const subscribe = exampleTwo.subscribe(val => console.log(val))
 #### expand
 ##### signature: `expand(project: function, concurrent: number, scheduler: Scheduler): Observable`
 
-递归地调用给定的函数。
-
+递归地调用给定的函数。  
 ([demo](http://jsbin.com/fuxocepazi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-expand))
 
 ```javascript
@@ -657,8 +680,7 @@ const subscribe = exmaple.subscribe(val => console.log(`RESULT: ${val}`))
 #### filter
 ##### signature: `filter(select: Function, thisArg: any): Observable`
 
-只返回符合给定条件的值。
-
+只返回符合给定条件的值。  
 ([demo](http://jsbin.com/gaqojobove/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-filter))
 
 ```javascript
@@ -680,8 +702,7 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(`Over 30: ${val.nam
 #### first
 ##### signature: `first(predicate: function, select: function)`
 
-emit 第一个值，或者第一个符合给定条件的值。
-
+emit 第一个值，或者第一个符合给定条件的值。  
 ([demo](http://jsbin.com/poloquxuja/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-first))
 
 ```javascript
@@ -708,8 +729,7 @@ const subscribeThree = exampleThree.subscribe(val => console.log(val))
 #### groupBy
 ##### signature: `groupBy(keySelector: Function, elementSelector: Function): Observable`
 
-按照给定的值，分组到 Observable。
-
+按照给定的值，分组到 Observable。  
 ([demo](http://jsbin.com/zibomoluru/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-groupBy))
 
 ```javascript
@@ -734,8 +754,7 @@ const subscribe = example.subscribe(val => console.log(val))
 #### ignoreElements
 ##### signature: `ignoreElements(): Observable`
 
-忽略所有的东西，除了 complete 和 error 。
-
+忽略所有的东西，除了 complete 和 error 。  
 ([demo](http://jsbin.com/luyufeviqu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-ignoreElements))
 
 ```javascript
@@ -771,8 +790,7 @@ const subscribeTwo = error.subscribe(
 #### last
 ##### signature: `last(predicate: function): Observable`
 
-emit 最后一个值，或者最后一个通过 test 的值。
-
+emit 最后一个值，或者最后一个通过 test 的值。  
 ([demo](http://jsbin.com/xidufijuku/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-last))
 
 ```javascript
@@ -791,9 +809,8 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(`Last to pass test:
 #### map
 #### signature: `map(project: Function, thisArg: any): Observable`
 
-把每个值都应用到 project function ，映射为新的值。
-
-([demo](http://jsbin.com/vegagizedo/1/edit?js,console) | [docs](http://reactivex-rxjs5.surge.sh/function/index.html#static-function-map))
+把每个值都应用到 project function ，映射为新的值。  
+([demo](http://jsbin.com/vegagizedo/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-map))
 
 ```javascript
 // emit (1, 2, 3, 4, 5)
@@ -815,8 +832,7 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(val))
 #### mapTo
 ##### signature: `mapTo(value: any): Observable`
 
-每一次都映射（map）为一个常量。
-
+每一次都映射（map）为一个常量。  
 ([demo](http://jsbin.com/yazusehahu/1/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mapTo))
 
 ```javascript
@@ -838,8 +854,7 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(val))
 #### merge
 ##### signature: `merge(input: Observable): Observable`
 
-把多个 Observable 压扁为一个 Observable 。
-
+把多个 Observable 压扁为一个 Observable 。  
 ([demo](http://jsbin.com/wicubemece/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-merge))
 
 ```javascript
@@ -872,8 +887,7 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(val))
 #### mergeMap
 ##### signature: `mergeMap(project: function: Observable, resultSelector: function: any, concurrent: number): Observable`
 
-把 source 的值先 map 到 inner Observable ，最后压扁返回。简而言之：`map` => `mergeAll` 。
-
+把 source 的值先 map 到 inner Observable ，最后压扁返回。简而言之：`map` => `mergeAll` 。  
 ([demo](http://jsbin.com/haxobidino/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap))
 
 ```javascript
@@ -907,8 +921,7 @@ const subscribeThree = exampleThree.subscribe(val => console.log(val))
 #### pluck
 ##### signature: `pluck(properties: ...args): Observable`
 
-挑选出嵌套的属性（nested property）。
-
+挑选出嵌套的属性（nested property）。  
 ([demo](http://jsbin.com/netulokasu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-pluck))
 
 ```javascript
@@ -936,9 +949,8 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(val))
 #### publish
 ##### signature: `publish() : ConnectableObservable`
 
-什么事情都不做，直到调用 `connect` ，共享 source 。
-
-([demo](http://jsbin.com/laguvecixi/edit?js,console) | [docs](http://reactivex-rxjs5.surge.sh/function/index.html#static-function-publish))
+什么事情都不做，直到调用 `connect` ，共享 source 。  
+([demo](http://jsbin.com/laguvecixi/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publish))
 
 ```javascript
 const source = Rx.Observable.interval(1000)
@@ -989,9 +1001,8 @@ const subscribe = example.subscribe(val => console.log(val))
 #### repeat
 ##### signature: `repeat(scheduler: Scheduler, count: number): Observable`
 
-指定 source 重复的次数。
-
-([demo](http://jsbin.com/lexabovuqa/1/edit?js,console) | [docs](http://reactivex-rxjs5.surge.sh/function/index.html#static-function-repeat))
+指定 source 重复的次数。  
+([demo](http://jsbin.com/lexabovuqa/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-repeat))
 
 ```javascript
 // emit 'Repeat this!'
@@ -1011,8 +1022,7 @@ const subscribeTwo = exampleTwo.subscribe(val => console.log(val))
 #### retry
 ##### signature: `retry(number: number): Observable`
 
-当发生 error 的时候，指定 retry 的次数。
-
+当发生 error 的时候，指定 retry 的次数。  
 ([demo](http://jsbin.com/yovacuxuqa/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-retry))
 
 ```javascript
@@ -1043,14 +1053,13 @@ const subscribe = example
 ```
 
 #### retryWhen
-##### signture: `etryWhen(receives: notificationHandler, the: scheduler): Observable`
+##### signature: `etryWhen(receives: notificationHandler, the: scheduler): Observable`
 
-在额外的逻辑的 retry 。
-
+在额外的逻辑的 retry 。  
 ([demo](http://jsbin.com/miduqexalo/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-retryWhen))
 
 ```javascript
-const source = RxObservable.interval(1000)
+const source = Rx.Observable.interval(1000)
 const example = source
   .map(val => {
     if (val > 5) {
@@ -1080,8 +1089,7 @@ const subscribe = example.subscribe(console.log)
 #### sample
 ##### signature: `sample(sampler: Observable): Observable`
 
-当给定的 Observable emit 的时候，返回 source 最新的一个样本（sample）。
-
+当给定的 Observable emit 的时候，返回 source 最新的一个样本（sample）。  
 ([demo](http://jsbin.com/wifaqipuse/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-sample))
 
 ```javascript
@@ -1106,8 +1114,7 @@ const subscribeTwo = exampleTwo.subscribe(console.log)
 #### scan
 ##### signature: `scan(accumulator: function, seed: any): Observable`
 
-reducer / 累加器
-
+reducer / 累加器  
 ([demo](http://jsbin.com/jopikihuvu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-scan))
 
 ```javascript
@@ -1135,8 +1142,7 @@ testSubject.next({ favoriteLanguage: 'JavaScript' }) // { name: 'Joe', age: 30, 
 #### share
 ##### signature: `share(): Observable`
 
-在多个 subscriber 中共享 observable 。
-
+在多个 subscriber 中共享 observable 。  
 ([demo](http://jsbin.com/jobiyomari/1/edit?js,console) | [dcos](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-share))
 
 ```javascript
@@ -1173,8 +1179,7 @@ const subscribeFour = shareExample.subscribe(console.log)
 #### single
 ##### signature: `signature: single(a: Function): Observable`
 
-emit 符合条件的一个单独的值。
-
+emit 符合条件的一个单独的值。  
 ([demo](http://jsbin.com/solecibuza/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-single))
 
 ```javascript
@@ -1189,8 +1194,7 @@ const subscribe = example.subscribe(console.log)
 #### skip
 ##### signature: `skip(the: Number): Observable`
 
-跳过指定数量的 emitted value 。
-
+跳过指定数量的 emitted value 。  
 ([demo](http://jsbin.com/hacepudabi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-skip))
 
 ```javascript
@@ -1204,8 +1208,7 @@ const subscribe = example.subscribe(console.log)
 #### skipUntil
 ##### signature: `skipUntil(the: Observable): Observable`
 
-跳过 source emit 的值，直到 inner Observable emit 。
-
+跳过 source emit 的值，直到 inner Observable emit 。  
 ([demo](http://jsbin.com/tapizososu/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-skipUntil))
 
 ```javascript
@@ -1216,12 +1219,11 @@ const example = source.skipUntil(Rx.Observable.timer(6000))
 const subscribe = example.subscribe(console.log)
 ```
 
-#### skipwhile
+#### skipWhile
 ##### signature: `skipWhile(predicate: Function): Observable`
 
-跳过 source emit 的值，直到给定的条件为 false 。
-
-([demo]() | [docs]())
+跳过 source emit 的值，直到给定的条件为 false 。  
+([demo]() | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-skipWhile))
 
 ```javascript
 const source = Rx.Observable.interval(1000)
@@ -1233,8 +1235,7 @@ const subscribe = example.subscribe(console.log)
 #### startWith
 ##### signature: `startWith(an: Values): Observable`
 
-指定第一个 emit 的值。
-
+指定第一个 emit 的值。  
 ([demo](http://jsbin.com/jeyakemume/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-startWith))
 
 ```javascript
@@ -1259,8 +1260,7 @@ const subscribe = exmapleTwo.subscribe(console.log)
 #### switchMap
 ##### signature: `switchMap(a: Observable): Observable`
 
-当 source emit 的时候，切换到 inner Observable ，并且 emit 他已经 emit 过的值。
-
+当 source emit 的时候，切换到 inner Observable ，并且 emit 他已经 emit 过的值。  
 ([demo](http://jsbin.com/decinatisu/1/edit?js,console,output) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-switchMap))
 
 ```javascript
@@ -1280,8 +1280,7 @@ const subscribeTwo = exampleTwo.subscribe(console.log)
 #### window
 ##### signature: `window(windowBoundaries: Observable): Observable`
 
-类似于 `buffer` ，但是返回的是 nested Observable 。
-
+类似于 `buffer` ，但是返回的是 nested Observable 。  
 ([demo](http://jsbin.com/jituvajeri/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-window))
 
 ```javascript
@@ -1309,8 +1308,7 @@ const subscribeTwo = example.mergeAll().subscribe(val => console.log(val))
 #### windowCount
 ##### signature: `windowCount(windowSize: number, startWindowEvery: number): Observable`
 
-source emit 的值是 Observable ，emit 的间隔是指定的时间。
-
+source emit 的值是 Observable ，emit 的间隔是指定的时间。  
 ([demo](http://jsbin.com/nezuvacexe/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-windowCount))
 
 ```javascript
@@ -1343,8 +1341,7 @@ const subscribeTwo = example
 #### windowTime
 ##### signature: `windowTime(windowTimeSpan: number, windowCreationInterval: number, scheduler: Scheduler): Observable`
 
-跟 `bufferTime` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。
-
+跟 `bufferTime` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。  
 ([demo](http://jsbin.com/mifayacoqo/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-windowTime))
 
 ```javascript
@@ -1375,8 +1372,7 @@ const subscribe = example
 #### windowToggle
 ##### signature: `windowToggle(openings: Observable, closingSelector: function(value): Observable): Observable`
 
-跟 `bufferTime` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。
-
+跟 `bufferTime` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。  
 ([demo](http://jsbin.com/xasofupuka/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-windowToggle))
 
 ```javascript
@@ -1406,8 +1402,7 @@ const subscribe = example
 #### windowWhen
 ##### signature: `windowWhen(closingSelector: function(): Observable): Observable`
 
-跟 `bufferWhen` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。
-
+跟 `bufferWhen` 一样，除了 emit 的值是 nested Observable 而不是一个 array 。  
 ([demo](http://jsbin.com/tuhaposemo/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-windowWhen))
 
 ```javascript
@@ -1439,8 +1434,7 @@ const subscribe = example
 #### withLatestFrom
 ##### signature: `withLatestFrom(other: Observable, project: Function): Observable`
 
-当 source emit 的时候，同时也返回另一个 Obserable 最近 emit 的那个值。
-
+当 source emit 的时候，同时也返回另一个 Obserable 最近 emit 的那个值。  
 ([demo](http://jsbin.com/xehucaketu/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-withLatestFrom))
 
 ```javascript
@@ -1474,8 +1468,7 @@ const subscribeTwo = exampleTwo.subscribe(console.log)
 #### zip
 ##### signature: `zip(observables: *): Observable`
 
-等到所有的 Observable 都 emit 之后，才作为数组返回。
-
+等到所有的 Observable 都 emit 之后，才作为数组返回。  
 ([demo](http://jsbin.com/torusemimi/1/edit?js,console) | [docs](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#static-method-zip))
 
 ```javascript
